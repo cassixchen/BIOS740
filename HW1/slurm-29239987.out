@@ -1,0 +1,102 @@
+💡 Tip: For seamless cloud uploads and versioning, try installing [litmodels](https://pypi.org/project/litmodels/) to enable LitModelCheckpoint, which syncs automatically with the Lightning model registry.
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+You are using a CUDA device ('NVIDIA A100-PCIE-40GB') that has Tensor Cores. To properly utilize them, you should set `torch.set_float32_matmul_precision('medium' | 'high')` which will trade-off precision for performance. For more details, read https://pytorch.org/docs/stable/generated/torch.set_float32_matmul_precision.html#torch.set_float32_matmul_precision
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+------Checking Samples------
+[INFO] Paired samples: 3855
+DX_NORM
+CN    2397
+AD    1458
+Name: count, dtype: int64
+------Checking SimpleCNN------
+Output shape: torch.Size([2, 2])
+Output tensor: tensor([[0.0120, 0.0701],
+        [0.0121, 0.0826]])
+------Checking SimpleResNet------
+Output shape: torch.Size([2, 2])
+Output tensor: tensor([[ 0.0002, -0.0193],
+        [-0.0009, -0.0181]])
+------Checking DataLoader Samples------
+The training set contain 3081 samples.
+Each sample has shape torch.Size([14, 150, 100]).
+------Training SimpleCNN------
+┏━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name      ┃ Type             ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ model     │ SimpleCNN        │  7.2 M │ train │     0 │
+│ 1 │ criterion │ CrossEntropyLoss │      0 │ train │     0 │
+└───┴───────────┴──────────────────┴────────┴───────┴───────┘
+Trainable params: 7.2 M                                                         
+Non-trainable params: 0                                                         
+Total params: 7.2 M                                                             
+Total estimated model params size (MB): 28                                      
+Modules in train mode: 12                                                       
+Modules in eval mode: 0                                                         
+Total FLOPs: 0                                                                  
+SLURM auto-requeueing enabled. Setting signal handlers.
+Epoch 8/49 ━━━━━━━━━━━━━━━━━━━━ 193/193 0:15:35 • 0:00:00 0.32it/s v_num: 22.000
+💡 Tip: For seamless cloud uploads and versioning, try installing [litmodels](https://pypi.org/project/litmodels/) to enable LitModelCheckpoint, which syncs automatically with the Lightning model registry.
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+------Training SimpleResNet------
+┏━━━┳━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━┳━━━━━━━━┳━━━━━━━┳━━━━━━━┓
+┃   ┃ Name      ┃ Type             ┃ Params ┃ Mode  ┃ FLOPs ┃
+┡━━━╇━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━╇━━━━━━━━╇━━━━━━━╇━━━━━━━┩
+│ 0 │ model     │ SimpleResNet     │ 13.8 M │ train │     0 │
+│ 1 │ criterion │ CrossEntropyLoss │      0 │ train │     0 │
+└───┴───────────┴──────────────────┴────────┴───────┴───────┘
+Trainable params: 13.8 M                                                        
+Non-trainable params: 0                                                         
+Total params: 13.8 M                                                            
+Total estimated model params size (MB): 55                                      
+Modules in train mode: 76                                                       
+Modules in eval mode: 0                                                         
+Total FLOPs: 0                                                                  
+SLURM auto-requeueing enabled. Setting signal handlers.
+Epoch 10/49 ━━━━━━━━━━━━━━━━━━━ 193/193 0:15:21 • 0:00:00 0.35it/s v_num: 23.000
+------Evaluating SimpleCNN------
+Test Accuracy:   0.8076
+Test Precision(w): 0.8157
+Test Recall(w):    0.8076
+Test F1(w):        0.7957
+Test ROC-AUC(w, ovr): 0.8927
+
+Confusion Matrix (rows=true, cols=pred):
+[[256  14]
+ [ 67  84]]
+
+Classification Report:
+              precision    recall  f1-score   support
+
+          CN     0.7926    0.9481    0.8634       270
+          AD     0.8571    0.5563    0.6747       151
+
+    accuracy                         0.8076       421
+   macro avg     0.8249    0.7522    0.7691       421
+weighted avg     0.8157    0.8076    0.7957       421
+
+------Evaluating SimpleResNet------
+Test Accuracy:   0.7482
+Test Precision(w): 0.7784
+Test Recall(w):    0.7482
+Test F1(w):        0.7128
+Test ROC-AUC(w, ovr): 0.8358
+
+Confusion Matrix (rows=true, cols=pred):
+[[262   8]
+ [ 98  53]]
+
+Classification Report:
+              precision    recall  f1-score   support
+
+          CN     0.7278    0.9704    0.8317       270
+          AD     0.8689    0.3510    0.5000       151
+
+    accuracy                         0.7482       421
+   macro avg     0.7983    0.6607    0.6659       421
+weighted avg     0.7784    0.7482    0.7128       421
+
+------Testing SimpleCNN------
+------Testing SimpleResNet------
