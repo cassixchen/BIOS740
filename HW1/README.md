@@ -6,27 +6,32 @@ This repository contains code to classify Alzheimer’s Disease (AD) using hippo
 **Please review the important notes at the bottom!**
 
 ## Files
-Raw Data:
-    - LeftCSV_organized
-    - RightCSV_organized
-    - ADNIMERGE_01Oct2024.csv
-Cleaned Data: 
-    - samples_with_dx_manifest.tsv
-Models:
-    - hw1.ipynb
-    - hw1.py (same as .ipynb but in .py format)
-Images:
-    - train_val_acc_SimpleCNN.png
-    - train_val_acc_SimpleResNet.png
-    - train_val_loss_SimpleCNN.png
-    - train_val_loss_SimpleResNet.png 
-    - sample.png
-Results: 
-    - slurm-29239987.out
-    - hw1_SimpleCNN.csv
-    - hw1_SimpleResNet.csv
-Slurm:
-    - hw1.sl
+**Raw Data:**
+- LeftCSV_organized
+- RightCSV_organized
+- ADNIMERGE_01Oct2024.csv
+
+**Cleaned Data:**
+- samples_with_dx_manifest.tsv
+
+**Models:**
+- hw1.ipynb
+- hw1.py (same as .ipynb but in .py format)
+
+**Images:**
+- train_val_acc_SimpleCNN.png
+- train_val_acc_SimpleResNet.png
+- train_val_loss_SimpleCNN.png
+- train_val_loss_SimpleResNet.png 
+- sample.png
+
+**Results:**
+- slurm-29239987.out
+- hw1_SimpleCNN.csv
+- hw1_SimpleResNet.csv
+
+**Slurm:**
+- hw1.sl
 
 ## IMPORTANT NOTES:
 
