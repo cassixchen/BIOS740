@@ -36,3 +36,5 @@ This repository contains code to classify Alzheimer’s Disease (AD) using hippo
 ## IMPORTANT NOTES:
 
 All code was originally written in hw1.ipynb and then converted to hw1.py in order to use hw1.sl. Numerical results can be found in slurm-29239987.out, while all image outputs are in .png format. All written texts and anlysis are in hw1.ipynb. Predictions are in hw1_SimpleCNN.csv and hw1_SimpleResNet.csv. Please review hw1.ipynb, slurm-29239987.out, __.csv, and __.png for a complete picture of the project. 
+
+Raw Data is not included in this repository. 
