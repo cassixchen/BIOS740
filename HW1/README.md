@@ -1,6 +1,8 @@
 # BIOS 740: Homework 1
 **Predicting Alzheimer's Disease Status Using Hippocampal Data**
+
 Cassi Chen
+
 This repository contains code to classify Alzheimer’s Disease (AD) using hippocampal data. The project compares a custom CNN against a custom ResNet18 architecture. Analysis and relevance are included.
 
 **Please review the important notes at the bottom!**
