@@ -12,10 +12,10 @@ This repository contains code to classify heartbeats from the MIT-BIH Arrhythmia
 - mitbih_train.csv
 - mitbih_test.csv
 
-**Code/Results/Discussion:**
+**Code/Discussion:**
 - HW2-Part1-heartbeat_classification_assignment.ipynb
 
-**Images:**
+**Images/Results**
 - GRU_confusion_matrix.png
 - GRU_metrics.png
 - LSTM_confusion_matrix.png
