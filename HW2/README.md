@@ -1,4 +1,4 @@
-# BIOS 740: Homework 1
+# BIOS 740: Homework 2
 Cassi Chen
 
 ## Part I: Heartbeat Classification with RNN, LSTM, and GRU
@@ -27,7 +27,6 @@ This repository contains code to classify heartbeats from the MIT-BIH Arrhythmia
 
 **Other:**
 - requirements.txt
-
 
 ## Part II: Building a Recurrent Neural Network - Step by Step
 
