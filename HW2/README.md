@@ -27,6 +27,7 @@ This repository contains code to classify heartbeats from the MIT-BIH Arrhythmia
 
 **Other:**
 - requirements.txt
+- rnn_utils.py
 
 ## Part II: Building a Recurrent Neural Network - Step by Step
 
