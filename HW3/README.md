@@ -20,12 +20,12 @@ This repository contains code to classify enzymes from the ENZYMES dataset from 
 - GCNHandmade_classification_report.txt
 - GCNHandmade_confusion_matrix_2.txt
 - GCNHandmade_confusion_matrix.txt
-- GCNHandmade_confusion_predictions.csv
+- GCNHandmade_predictions.csv
 - GCNPyG_classification_report_2.txt
 - GCNPyG_classification_report.txt
 - GCNPyG_confusion_matrix_2.txt
 - GCNPyG_confusion_matrix.txt
-- GCNPyG_confusion_predictions.csv
+- GCNPyG_predictions.csv
 
 **Other:**
 - requirements.txt
