@@ -1,0 +1,7 @@
+Results and Analysis: Key Findings and Observations
+
+Both GCNHandmade and GCNPyG performed poorly, yeilding accuracies of 20 and 18% respectively. Due to the random nature of the GCN architecture, different runs can yeild different results. Sometimes, GCNHandmade outperforms GCNpyG and vice verse. However, the accuracy is usually never above 30%. 
+
+Looking at the classification report, some classes have a precision and recall of 0, meaning these classes were never predicted. This is true for class 0 of GCNHandmade and class 0 and 1 of GCNPyG. Meanwhile, class 5 has a recall of 1 but a precision of 0.2353 for GCNHandmade and 0.1290 for GCNPyG, implying that this class is often over-predicted. f1 is also extremely low for all 6 classes. Macro and weighted averages were also really low. These 4 observations suggest that there is class imbalance. This may be caused by the small dataset of only 600 graphs, with a 80-10-10 train-val-test split.
+
+Ways to improve the current models include balancing out the samples for training, validating, and testing. We can also potentially add more layers in the GCN models.
