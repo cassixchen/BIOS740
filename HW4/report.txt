@@ -3,17 +3,17 @@ Cassi Chen
 
 --------------------------------------------------------
 
-## 1. Data Exploration and Preprocessing
+1. Data Exploration and Preprocessing
 
 -------------------
 
-#### Data Loading: 
+Data Loading: 
 
 Dataset is of paired samples of T1 and T2 MRI image slices. There are 19975 paired samples. After preprocessing, each individual sample is of size [1, 256, 256] for T1 and T2. 1 represents the number of channels (1 for greyscale) and 256 represents the dimensions of the image. 
 
 -------------------
 
-#### Preprocessing: 
+Preprocessing: 
 
 - Convert: ensure greyscale for consistency among all images during training
 
@@ -25,11 +25,11 @@ Dataset is of paired samples of T1 and T2 MRI image slices. There are 19975 pair
 
 --------------------------------------------------------
 
-## 2. GAN Architecture
+2. GAN Architecture
 
 -------------------
 
-#### Generator Design:
+Generator Design:
 
 NOTE: U-Net architecture inspired by https://arxiv.org/pdf/1611.07004
 
@@ -38,19 +38,19 @@ Inputs: [B, 1, 256, 256], where B = batch size, 1 = grayscale MRI channel, 256 �
 Outputs: [B, 1, 256, 256], where B = batch size, 1 = grayscale MRI channel, 256 × 256 spatial image dimensions for translated T2
 
 
-##### Encoder:
+Encoder:
 
 Convolution Block: 8 total
 * All 8 blocks: Conv2D → Batch Normalization (except first and last layer) → LeakyReLu
 
-##### Decoder:
+Decoder:
 
 Deconvolution Block: 8 total
 * First 7 blocks: ConvTranspose2D → Batch Normalization → LeakyReLu
 * Last block: ConvTranspose2D → Tanh
 
 
-##### Layer Details: 
+Layer Details: 
 
 Convolution layers:
 * extract hierarchical features
@@ -77,7 +77,7 @@ Normalization Layers:
     * normalize feature distributions
 
 
-##### Design Decisions: 
+Design Decisions: 
 
 Kernel Size: 4 × 4
 * preserve dimensionaity with padding
@@ -154,7 +154,7 @@ U8/Output: [B, 1, 256, 256]
 
 -------------------
 
-#### Discriminator Design:
+Discriminator Design:
 
 NOTE: architecture inspired by https://arxiv.org/pdf/1611.07004
 
@@ -166,7 +166,7 @@ Convolution Block: 5 total
 * First 4 blocks: Conv2D → Batch Normalization (except first) → LeakyReLu
 * Last block: Conv2D → Sigmoid
 
-##### Layer Details:
+Layer Details:
 
 Convolution layers: 5 total
 * extract hierarchical features
@@ -185,7 +185,7 @@ Normalization Layers:
     * stabalize training
     * normalize feature distributions
 
-##### Design Decisions: 
+Design Decisions: 
 
 Kernel Size: 4 × 4
 * preserve dimensionaity with padding
@@ -227,11 +227,11 @@ B5/Output: [B, 1, 30, 30]
 
 --------------------------------------------------------
 
-## 3. Training and Validation
+3. Training and Validation
 
 -------------------
 
-#### Adversarial Training Setup
+Adversarial Training Setup
 
 Loss Functions: 
 * Generator: Binary Cross-Entropy, L1, Perceptual
@@ -248,7 +248,7 @@ Optimization Procedure
 
 -------------------
 
-#### Monitoring Progress
+Monitoring Progress
 Generator and discriminator losses are tracked and logged during training in lightning_logs using PyTorch Lightning. Generated images are also saved in lightning_logs. These logs allow visualization of adversarial loss curves and generated sample images to monitor model training and stability.
 
 The code below shows how to retrieve the losses and plots the the adversairal loss curve. Some generated sample images are also shown from the 1st batch.
@@ -256,16 +256,16 @@ The code below shows how to retrieve the losses and plots the the adversairal lo
 
 --------------------------------------------------------
 
-## 4. Model Evaluation
+4. Model Evaluation
 
 -------------------
 
-#### Qualitative Assessment
+Qualitative Assessment
 Some generated sample test and validation images are also shown from the 1st batch above. The generated images appear close to the real images, with some noticeable differences in quality.
 
 -------------------
 
-#### Quantitative Assessment
+Quantitative Assessment
 Peak Signal-to-Noise Ratio (PSNR) = 28.53 
 * 28.53 > 20 db is acceptable $\implies$ GAN produces images with low reconstruction error
 Structural Similarity Index (SSIM) = 0.84
@@ -273,7 +273,7 @@ Structural Similarity Index (SSIM) = 0.84
 
 -------------------
 
-#### Discussion of Results
+Discussion of Results
 
 With the ok PSNR = 28.53 and the extremely high SSIM = 0.84, GAN has learned the distirbution of training set well instead of memorizing individual examples. Thus, it is generalizable to unseen test samples. 
 
