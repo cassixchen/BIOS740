@@ -1,0 +1,282 @@
+BIOS 740: Homework 4 Writeup
+Cassi Chen
+
+--------------------------------------------------------
+
+## 1. Data Exploration and Preprocessing
+
+-------------------
+
+#### Data Loading: 
+
+Dataset is of paired samples of T1 and T2 MRI image slices. There are 19975 paired samples. After preprocessing, each individual sample is of size [1, 256, 256] for T1 and T2. 1 represents the number of channels (1 for greyscale) and 256 represents the dimensions of the image. 
+
+-------------------
+
+#### Preprocessing: 
+
+- Convert: ensure greyscale for consistency among all images during training
+
+- Resize: 256 x 256 to keep size consistency among all images during training
+
+- ToTensor: convert to PyTorch tensor to be used in model
+
+- Normalize: scale image from [0,1] to [-1, 1] to improve convergence of model and give equal range of value to all features
+
+--------------------------------------------------------
+
+## 2. GAN Architecture
+
+-------------------
+
+#### Generator Design:
+
+NOTE: U-Net architecture inspired by https://arxiv.org/pdf/1611.07004
+
+Inputs: [B, 1, 256, 256], where B = batch size, 1 = grayscale MRI channel, 256 × 256 spatial image dimensions for T1
+
+Outputs: [B, 1, 256, 256], where B = batch size, 1 = grayscale MRI channel, 256 × 256 spatial image dimensions for translated T2
+
+
+##### Encoder:
+
+Convolution Block: 8 total
+* All 8 blocks: Conv2D → Batch Normalization (except first and last layer) → LeakyReLu
+
+##### Decoder:
+
+Deconvolution Block: 8 total
+* First 7 blocks: ConvTranspose2D → Batch Normalization → LeakyReLu
+* Last block: ConvTranspose2D → Tanh
+
+
+##### Layer Details: 
+
+Convolution layers:
+* extract hierarchical features
+* gradually increase channels to learn more complex structures (1 → 64 → 128 → 256 → 256 → 512 → 512 → 512 → 512)
+* reduce spatial dimensions
+
+Transposed convolution layers: 
+* decrease channels for reconstruction (512 → 512 → 512 → 256 → 256 → 128 → 64 → 1)
+* reconstruct spatial resolution
+
+Activation Functions: 
+* LeakyReLU: 0.2 slope
+    * like ReLU
+    * prevents dead neurons
+* ReLU: 
+    * introduces non-linearity
+    * prevents vanishing gradients
+* Tanh: 
+    * maps output to [-1,1] to match with normalize image range
+
+Normalization Layers:
+* Batch Normalization
+    * stabalize training
+    * normalize feature distributions
+
+
+##### Design Decisions: 
+
+Kernel Size: 4 × 4
+* preserve dimensionaity with padding
+* small size to catch local patterns
+
+Stride: 2
+* downsampling: halves spatial dimensions
+* upsampling: doubles spatial dimensions
+
+Padding: 1
+* ensures features near edge of data to be included by adding a one-border pixel
+* preserve spatial dimension with the given kernel size and strides
+
+Skip connections: 
+* used between corresponding encoder and decoder layers to preserve high-resolution spatial details (U1 with D7, U2 with D6, ..., U7 with D1)
+* improve gradient flow
+
+Regularization Techniques: 
+* Dropout: 0.3 rate
+    * reduces overfitting
+* Batch Normalization
+    * stabalize training
+    * normalize feature distributions
+     
+Other: 
+* Encoder:
+    * Batch Normalization not in first layer
+        * don't want to accidentally remove useful information
+    * Batch Normalization not in last layer
+        * don't want to change distribution of values before decoder
+* Decoder:
+    * Dropout in first 3 layers
+        * don't want to remove spatial information on large feature maps
+
+Input, Intermediate, Output Dimensions:
+
+ENCODER
+
+Input: [B, 1, 256, 256]
+
+D1: [B,  64, 128, 128]
+
+D2: [B, 128, 64, 64]
+
+D3: [B, 256, 32, 32]
+
+D4: [B, 256, 16, 16]
+
+D5:[B, 512, 8, 8]
+
+D6: [B, 512, 4, 4]
+
+D7: [B, 512, 2, 2]
+
+D8: [B, 512, 1, 1] (LATENT)
+
+DECODER
+
+U1: [B, 1024, 2, 2] 
+
+U2: [B,1024, 4, 4]
+
+U3: [B,1024, 8, 8] 
+
+U4: [B, 512, 16, 16]
+
+U5: [B, 512, 32, 32] 
+
+U6: [B, 256, 64, 64] 
+
+U7: [B, 128, 128, 128]
+
+U8/Output: [B, 1, 256, 256]
+
+-------------------
+
+#### Discriminator Design:
+
+NOTE: architecture inspired by https://arxiv.org/pdf/1611.07004
+
+Inputs: [B, 2, 256, 256], where B = batch size, 2 = grayscale MRI channel for T1 and T2 combined, 256 × 256 spatial image dimensions for T1 and T2
+
+Outputs: [B,  1, 30, 30], where B = batch size, 1 = grayscale MRI channel, 30 × 30 probability that image patch is real or fake
+
+Convolution Block: 5 total
+* First 4 blocks: Conv2D → Batch Normalization (except first) → LeakyReLu
+* Last block: Conv2D → Sigmoid
+
+##### Layer Details:
+
+Convolution layers: 5 total
+* extract hierarchical features
+* gradually increase channels to learn more complex structures (1 → 64 → 128 → 256 → 256 → 512 → 512 → 512 → 512)
+* * reduce spatial dimensions
+
+Activation Functions: 
+* LeakyReLU: 0.2 slope
+    * like ReLU
+    * prevents dead neurons
+* Sigmoid
+    * maps output to [0,1] for probability values
+
+Normalization Layers:
+* Batch Normalization
+    * stabalize training
+    * normalize feature distributions
+
+##### Design Decisions: 
+
+Kernel Size: 4 × 4
+* preserve dimensionaity with padding
+* small size to catch local patterns
+
+Stride:
+* First 4 layers: halves spatial dimensions, 2
+* Last layer: convert dimension to even number, 1
+
+Padding: 1
+* ensures features near edge of data to be included by adding a one-border pixel
+* preserve spatial dimension with the given kernel size and strides
+
+Regularization Techniques:  
+* Batch Normalization
+    * stabalize training
+    * normalize feature distributions
+
+Other:
+* Batch Normalization not in first layer of encoder
+    * don't want to accidentally remove useful information
+* Batch Normalization not in last layer of encoder
+    * don't want to change distribution of values before assigning a probability
+
+Input, Intermediate, Output Dimensions:
+
+Input:  [B, 2, 256, 256]
+
+B1:  [B, 64, 128, 128]
+
+B2:  [B, 128, 64, 64]
+
+B3:  [B, 256, 32, 32]
+
+B4:  [B, 512, 31, 31]
+
+B5/Output: [B, 1, 30, 30]
+
+
+--------------------------------------------------------
+
+## 3. Training and Validation
+
+-------------------
+
+#### Adversarial Training Setup
+
+Loss Functions: 
+* Generator: Binary Cross-Entropy, L1, Perceptual
+* Discriminator: Binary Cross-Entropy
+
+Hyperparameters
+* Learning Rate: 2e-4
+* Batch Size: 16
+* Latent Space Dimension: [B, 512, 1, 1]
+* Training Epochs: max 50
+
+Optimization Procedure
+* Adam ($\beta_1$ = 0.5, $\beta_2$ = 0.999)
+
+-------------------
+
+#### Monitoring Progress
+Generator and discriminator losses are tracked and logged during training in lightning_logs using PyTorch Lightning. Generated images are also saved in lightning_logs. These logs allow visualization of adversarial loss curves and generated sample images to monitor model training and stability.
+
+The code below shows how to retrieve the losses and plots the the adversairal loss curve. Some generated sample images are also shown from the 1st batch.
+
+
+--------------------------------------------------------
+
+## 4. Model Evaluation
+
+-------------------
+
+#### Qualitative Assessment
+Some generated sample test and validation images are also shown from the 1st batch above. The generated images appear close to the real images, with some noticeable differences in quality.
+
+-------------------
+
+#### Quantitative Assessment
+Peak Signal-to-Noise Ratio (PSNR) = 28.53 
+* 28.53 > 20 db is acceptable $\implies$ GAN produces images with low reconstruction error
+Structural Similarity Index (SSIM) = 0.84
+* 0.84 close to 1 $\implies$ GAN captured most of the structural patterns in the T2 images
+
+-------------------
+
+#### Discussion of Results
+
+With the ok PSNR = 28.53 and the extremely high SSIM = 0.84, GAN has learned the distirbution of training set well instead of memorizing individual examples. Thus, it is generalizable to unseen test samples. 
+
+
+
+--------------------------------------------------------
